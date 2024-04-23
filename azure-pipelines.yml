@@ -1,0 +1,44 @@
+resources:
+  repositories:
+  - repository: pipelines_repo
+    type: github
+    endpoint: github.com_amd-jmacaran
+    name: amd-jmacaran/pipelines
+  
+
+variables:
+- group: common
+- template: /.azuredevops/variables-global.yml@pipelines_repo
+
+trigger:
+  batch: true
+  branches:
+    include:
+    - master
+  paths:
+    exclude:
+    - .github
+    - docs
+    - '**/README.md'
+    - '.*'
+    - LICENSE.txt
+    - README.md
+
+pr:
+  autoCancel: true
+  branches:
+    include:
+    - master
+  paths:
+    exclude:
+    - .github
+    - docs
+    - '**/README.md'
+    - '.*'
+    - LICENSE.txt
+    - README.md
+  drafts: false
+
+jobs:
+  - template: ${{ variables.CI_COMPONENT_PATH }}/rocWMMA.yml@pipelines_repo
+  
